@@ -8,8 +8,6 @@ function App() {
       <div className="toDoList">
         <TodoList style="padding: 5px"/>
       </div>
-
-
     </div>
   );
 }

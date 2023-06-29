@@ -10,26 +10,36 @@ body{
 }
 
 .toDoList{
-    background-image: url("https://images.unsplash.com/photo-1514467911470-2b2492c64477?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80");
+    background-color: #e3e3e3;
     background-size: cover;
     background-position: center;
     padding: 40px 60px;
     border-radius: 20px;
 }
 
+.todo{
+    padding: 4px;
+    margin: 10px;
+    border-radius: 10px;
+}
 
 
-input{
+
+input[type="text"]{
     padding: 10px;
     border-radius: 4px;
     border: none;
+    margin-top: 40px;
+    height: 30px;
+    width: 300px;
+ 
 }
 
 button{
     padding: 5px;
     border-radius: 4px;
     border: none;
-    background-color: rgb(225, 223, 223);
+    background-color: #cbc9c9;
     margin: 5px;
     font-size: 14;
 }

@@ -1,23 +1,38 @@
 import Todo from "./Todo";
 import React, { Component } from "react";
 import './style.css'
+import AddTodo from "./AddTodo";
 
 const startingLists = [
   {
     task: "Make Pancake",
-    urgent: false
+    urgent: false,
+    completed: false
   },
   {
     task: "Sleep at least 6 hours",
-    urgent: true
+    urgent: true,
+    completed: false
   },
   {
     task: "Get a coffee!",
-    urgent: true
+    urgent: true,
+    completed: false
   },
   {
     task: "Make a Todo app - class component",
-    urgent: false
+    urgent: false,
+    completed: true
+  },
+   {
+    task: "Drink Hotchoc",
+    urgent: false,
+    completed: true
+  },
+   {
+    task: "Water the catus",
+    urgent: false,
+    completed: false
   }
 ];
 
@@ -27,34 +42,42 @@ class TodoList extends Component {
     newTodo: "",
     deletedTask: null,
     showOnlyUrgent: false,
-    newTaskUrgent: false
+    newTaskUrgent: false,
+    completed: false
   };
+// handleChange = (event) => {
+//     this.setState({ newTodo: event.target.value });
+//   }
 
-  handleChange = (event) => {
-    this.setState({ newTodo: event.target.value });
-  };
+  // urgentHandleChange = () => {
+  //   this.setState((prevState) => ({ newTaskUrgent: !prevState.newTaskUrgent }));
+  // }
 
-  urgentHandleChange = () => {
-    this.setState((prevState) => ({ newTaskUrgent: !prevState.newTaskUrgent }));
-  };
+  // saveToDo = () => {
+  //   const { newTodo, newTaskUrgent, newCompleted } = this.state;
+  //   const newTask = {
+  //     task: newTodo,
+  //     urgent: newTaskUrgent,
+  //     completed: newCompleted
+  //   };
 
-  saveToDo = () => {
-    const { newTodo, newTaskUrgent } = this.state;
-    const newTask = {
-      task: newTodo,
-      urgent: newTaskUrgent
-    };
+  //   this.setState((prevState) => ({
+  //     todos: [...prevState.todos, newTask],
+  //     newTodo: "",
+  //     newTaskUrgent: false,
+  //     newCompleted: false
+  //   }))
+  // }
 
+  saveToDo = (newTodo) => {
     this.setState((prevState) => ({
-      todos: [...prevState.todos, newTask],
-      newTodo: "",
-      newTaskUrgent: false
-    }));
-  };
+      todos: [...prevState.todos, newTodo]
+    }))
+  }
 
   clearList = () => {
     this.setState({ todos: [] });
-  };
+  }
 
   clearTask = () => {
     const [removedTask, ...remainingTodos] = this.state.todos;
@@ -63,6 +86,12 @@ class TodoList extends Component {
       deletedTask: removedTask
     });
   };
+
+  clearCompletedTask = () => {
+    this.setState((prevState) => ({
+      todos: prevState.todos.filter((todo) => !todo.completed)
+    }))
+  }
 
   recallTask = () => {
     const { deletedTask, todos } = this.state;
@@ -81,8 +110,19 @@ class TodoList extends Component {
     }));
   };
 
+  markAsCompleted = (index) => {
+    this.setState((prevState) => {
+      const updatedTodos = [...prevState.todos]
+
+      updatedTodos[index].completed = true;
+      return{todos: updatedTodos}
+    }
+
+    )
+  }
+
   render() {
-    const { todos, newTodo, showOnlyUrgent, newTaskUrgent } = this.state;
+    const { todos, showOnlyUrgent } = this.state;
 
     const filteredTodos = showOnlyUrgent
       ? todos.filter((todo) => todo.urgent)
@@ -100,8 +140,8 @@ class TodoList extends Component {
     return (
       <div>
         <button onClick={this.clearTask}>Clear First Task</button>
+        <button onClick={this.clearCompletedTask}>Clear Completed Tasks</button>
         <button onClick={this.clearList}>Clear Whole List</button>
-        <Todo className="toDo"/>
         <button onClick={this.recallTask}>Recall Deleted Task</button>
 
           <button onClick={this.toggleShowOnlyUrgent}>
@@ -109,24 +149,15 @@ class TodoList extends Component {
           </button>
 
         {filteredTodos.map((list, index) => (
-          <Todo key={index} content={list.task} urgent={list.urgent} />
+          <Todo 
+          key={index} 
+          content={list.task} 
+          urgent={list.urgent}
+          completed={list.completed}
+          markAsCompleted = {() => this.markAsCompleted(index)}
+           />
         ))}
-
-        <div className="addTask">
-          <input
-            type="text"
-            onChange={this.handleChange}
-            value={newTodo}
-          ></input>
-          <label>
-            <input
-              type="checkbox"
-              checked={newTaskUrgent}
-              onChange={this.urgentHandleChange}
-            ></input><strong>Urgent</strong>
-          </label>
-          <button onClick={this.saveToDo}>Add</button>
-        </div>
+        <AddTodo  saveTodo={this.saveToDo}/>
       </div>
     );
   }
